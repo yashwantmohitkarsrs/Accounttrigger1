@@ -1,0 +1,23 @@
+//when new ACCOUNT record is created than needs to create its associated CONTACT record automatically.
+trigger AccountToContactCreate on Account (after insert)
+{
+    List<Contact> Conlist=new List<Contact>();
+  if(trigger.Isinsert && trigger.Isafter )    
+  {
+        for(Account Acc:trigger.new)
+    {
+        if(Acc.Name!=Null)
+        {
+          Contact Con=new Contact();
+          Con.Accountid = Acc.id;
+          Con.LastName= Acc.Name;
+          Con.Description= Acc.Description;
+           Conlist.add(Con);    
+        }
+    }
+  }
+   if(!Conlist.isEmpty())
+    {
+          database.insert(Conlist,false);
+    }
+}
